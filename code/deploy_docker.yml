@@ -1,0 +1,39 @@
+# Deploy Docker
+---
+- name: DevEnv
+  hosts: all
+
+  tasks:
+    
+    # Setting up pre-install
+    - name: Setting up pre-install
+      apt:
+        name: '{{ packages }}'
+        state: latest
+        install_recommends: yes
+      vars:
+        packages:
+        - apt-transport-https
+        - ca-certificates
+        - gnupg2
+        - software-properties-common
+    
+    # Install Docker CE
+    - name: Docker CE - add key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+        
+    - name: Docker CE - add repo
+      apt_repository:
+        repo: 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable'
+        state: present
+        
+    - name: Docker CE - install package
+      apt:
+        name: '{{ packages }}'
+        state: latest
+        install_recommends: yes
+      vars:
+        packages:
+        - docker-ce
