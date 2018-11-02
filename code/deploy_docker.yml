@@ -1,6 +1,6 @@
 # Deploy Docker
 ---
-- name: DevEnv
+- name: Deploy Docker
   hosts: all
 
   tasks:
@@ -37,3 +37,4 @@
       vars:
         packages:
         - docker-ce
+        - docker-compose
