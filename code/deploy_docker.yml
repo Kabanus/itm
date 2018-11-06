@@ -8,11 +8,10 @@
     # Setting up pre-install
     - name: Setting up pre-install
       apt:
-        name: '{{ packages }}'
+        name: '{{ item }}'
         state: latest
         install_recommends: yes
-      vars:
-        packages:
+      with_items:
         - apt-transport-https
         - ca-certificates
         - gnupg2
@@ -31,10 +30,30 @@
         
     - name: Docker CE - install package
       apt:
-        name: '{{ packages }}'
+        name: '{{ item }}'
         state: latest
         install_recommends: yes
-      vars:
-        packages:
+      with_items:
         - docker-ce
         - docker-compose
+
+    # Add developer account
+    - name: Add developer account
+      user:
+        name: developer
+        password: password
+        group: docker
+
+    # Make dirs
+    - name: Make dirs
+      file:
+        path: '{{ item }}'
+        state: directory
+        owner: developer
+        group: docker
+        mode: 0770
+      with_items:
+        - '/app/mysql/prod'
+        - '/app/mysql/devel'
+        - '/app/wordpress/prod'
+        - '/app/wordpress/devel'
