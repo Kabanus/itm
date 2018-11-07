@@ -1,0 +1,95 @@
+# Deploy Docker
+---
+- name: Deploy Docker
+  hosts: all
+
+  tasks:
+    
+    # Setting up pre-install
+    - name: Setting up pre-install
+      apt:
+        name: '{{ item }}'
+        state: latest
+        install_recommends: yes
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - gnupg2
+        - software-properties-common
+    
+    # Install Docker CE
+    - name: Docker CE - add key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+        
+    - name: Docker CE - add repo
+      apt_repository:
+        repo: 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable'
+        state: present
+        
+    - name: Docker CE - install package
+      apt:
+        name: '{{ item }}'
+        state: latest
+        install_recommends: yes
+      with_items:
+        - docker-ce
+        - docker-compose
+
+    # Add developer account
+    - name: Add developer account
+      user:
+        name: developer
+        password: password
+        group: docker
+
+    # Make dirs
+    - name: Make dirs
+      file:
+        path: '{{ item }}'
+        state: directory
+        owner: developer
+        group: docker
+        mode: 0770
+      with_items:
+        - '/app/mysql/prod'
+        - '/app/mysql/devel'
+        - '/app/wordpress/prod'
+        - '/app/wordpress/devel'
+        - '/app/docker/prod'
+        - '/app/docker/devel'
+
+    # Make files
+    - name: Make files
+      file:
+        path: '{{ item }}'
+        state: touch
+        owner: developer
+        group: docker
+        mode: 0660
+      with_items:
+#        - '/app/docker/prod/Dockerfile'
+        - '/app/docker/prod/docker-compose.yml'
+#        - '/app/docker/devel/Dockerfile'
+        - '/app/docker/devel/docker-compose.yml'
+
+    # Dockerfile/Docker-compose
+#    - name: Dockerfile prod
+#        dest: /app/docker/prod/Dockerfile
+#        block: |
+#          FROM debian
+    
+    - name: Docker-compose prod
+      blockinfile:
+        dest: /app/docker/prod/docker-compose.yml
+        block: |
+          version: '2'
+          services:
+            prod:
+              image: debian
+              volumes:
+                - /app/mysql/prod:/var/lib/mysql
+                - /app/wordpress/prod:/var/www
+              ports:
+                - '80:80'
