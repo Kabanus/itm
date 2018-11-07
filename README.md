@@ -11,6 +11,3 @@ ansible-playbook -b -i localhost, itm/code/deploy_docker.yml
 
 # 3.2. deploy docker with password
 ansible-playbook -k -b -i localhost, itm/code/deploy_docker.yml
-
-#
-sudo usermod -aG docker developer
