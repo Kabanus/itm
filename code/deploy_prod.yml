@@ -87,27 +87,27 @@
         
     - name: MySQL - add wordpress database
       mysql_db:
-        name: wordpress
+        name: wp_db_prod
         state: present
         
     - name: MySQL - add wordpress account
       mysql_user:
         name: 'wordpress'
         password: 'password'
-        priv: 'wordpress.*:ALL'
+        priv: 'wp_db_prod.*:ALL'
         state: present
         
     - name: MySQL - add developer account
       mysql_user:
         name: 'developer'
         password: 'password'
-        priv: 'wordpress.*:ALL'
+        priv: 'wp_db_prod.*:ALL'
         state: present
 
-#    - name: MySQL - stop service
-#      service:
-#        name: mysql
-#        state: stopped
+    - name: MySQL - stop service
+      service:
+        name: mysql
+        state: stopped
 
     - name: MySQL - disable service
       service:
