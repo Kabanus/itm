@@ -5,7 +5,7 @@
 
   tasks:
     
-    # Setup MySQL DB
+    # Deploy MySQL
     - name: MySQL - install packages
       apt:
         name: '{{ item }}'

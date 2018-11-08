@@ -1,11 +1,11 @@
-# DevEnv
+# Deploy Wordpress
 ---
-- name: DevEnv
+- name: Deploy Wordpress
   hosts: all
 
   tasks:
     
-    # Install Wordpress
+    # Deploy Wordpress
     - name: Wordpress - download/extract
       unarchive:
         src: https://wordpress.org/latest.tar.gz

@@ -1,11 +1,11 @@
-# DevEnv
+# Deploy PHP
 ---
-- name: DevEnv
+- name: Deploy PHP
   hosts: all
 
   tasks:
     
-    # Install PHP
+    # Deploy PHP
     - name: PHP - install packages
       apt:
         name: '{{ packages }}'
