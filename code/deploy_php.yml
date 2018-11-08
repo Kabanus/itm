@@ -1,0 +1,17 @@
+# DevEnv
+---
+- name: DevEnv
+  hosts: all
+
+  tasks:
+    
+    # Install PHP
+    - name: PHP - install packages
+      apt:
+        name: '{{ packages }}'
+        state: latest
+        install_recommends: yes
+      vars:
+        packages:
+        - php-fpm
+        - php-mysql

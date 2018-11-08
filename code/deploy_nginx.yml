@@ -1,0 +1,60 @@
+# DevEnv
+---
+- name: DevEnv
+  hosts: all
+
+  tasks:
+    
+    # Install Nginx
+    - name: Nginx - install packages
+      apt:
+        name: '{{ packages }}'
+        state: latest
+        install_recommends: yes
+      vars:
+        packages:
+        - nginx
+    
+    - name: Nginx - disable default site
+      file:
+        dest: /etc/nginx/sites-enabled/default
+        state: absent        
+        
+    # Install Wordpress
+    - name: Wordpress - create site
+      file:
+        path: "/etc/nginx/sites-available/wordpress"
+        state: touch
+        
+    - name: Wordpress - set site
+      blockinfile:
+        dest: /etc/nginx/sites-available/wordpress
+        block: |
+          server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
+            root /var/www/wordpress;
+            index index.html index.htm index.nginx-debian.html index.php;
+            server_name _;
+            location / {
+              try_files $uri $uri/ =404;
+            }
+            location ~ \.php$ {
+              include snippets/fastcgi-php.conf;
+              fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+            }
+            location ~ /\.ht {
+              deny all;
+            }
+          }
+    
+    - name: Wordpress - enable site
+      file:
+        src: /etc/nginx/sites-available/wordpress
+        dest: /etc/nginx/sites-enabled/wordpress
+        state: link
+    
+    - name: Wordpress - Nginx restart
+      service:
+        name: nginx
+        state: restarted
