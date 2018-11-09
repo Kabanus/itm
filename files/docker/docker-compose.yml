@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  mysql:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - /app/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
