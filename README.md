@@ -1,4 +1,4 @@
-# 1. install ansible
+# 1. install ansible/git
 sudo apt -y install ansible sshpass git
 
 # 2. disable key check
