@@ -57,3 +57,4 @@
         - '/app/mysql'
         - '/app/wordpress'
         - '/app/docker'
+        - '/app/nginx'

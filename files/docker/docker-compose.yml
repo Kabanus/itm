@@ -1,12 +1,29 @@
 version: '2'
 
 services:
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - /app/wordpress:/var/www/wordpress
+      - /app/nginx/wordpress:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    links:
+      - php
+      - mysql 
+
+  php:
+    image: php:7.2-fpm
+    build: ./php
+    volumes:
+      - /app/wordpress:/var/www/wordpress
+
   mysql:
-    image: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
+    image: mariadb:latest
     volumes:
       - /app/mysql:/var/lib/mysql
     ports:
       - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
