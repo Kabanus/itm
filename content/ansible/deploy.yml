@@ -41,18 +41,19 @@
     - name: Add developer account
       user:
         name: developer
-        password: password
+        password: '$6$e25JeOyd$Bdpg0JJRJ6RZbcqVY1q44a5Bwzi3vEUMFkFbMinGdSnPN6kEHo9Dei0XT653gVrhPZ6iBWMQxHndAbSHgaIfZ1'
         group: docker
+        shell: /bin/bash
 
     # Set chown/chmod
     - name: Chown
       command: find /app/ -mindepth 1 -exec chown developer:docker {} \;
 
     - name: Chmod - dirs
-      command: find /app/ -mindepth 1 -type d -exec chmod 0777 developer:docker {} \;
+      command: find /app/ -mindepth 1 -type d -exec chmod 0775 {} \;
 
     - name: Chmod - files
-      command: find /app/ -mindepth 1 -type f -exec chmod 0666 developer:docker {} \;
+      command: find /app/ -mindepth 1 -type f -exec chmod 0664 {} \;
 
     # Start App
     - name: Start App
