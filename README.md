@@ -2,7 +2,7 @@
 sudo apt -y install ansible sshpass git
 
 # 2. clone git
-sudo mkdir /app && cd /apt && git clone
+sudo mkdir -m 0777 /app && cd /app && git clone https://github.com/Kabanus/itm.git
 
 # 2. disable key check
 sudo sed -i 's/#host_key_checking/host_key_checking/' /etc/ansible/ansible.cfg
