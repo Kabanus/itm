@@ -1,0 +1,60 @@
+# Deploy App
+---
+- name: Deploy App
+  hosts: all
+
+  tasks:
+    
+    # Setting up pre-install
+    - name: Setting up pre-install
+      apt:
+        name: '{{ item }}'
+        state: latest
+        install_recommends: yes
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - gnupg2
+        - software-properties-common
+    
+    # Install Docker CE
+    - name: Docker CE - add key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+        
+    - name: Docker CE - add repo
+      apt_repository:
+        repo: 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable'
+        state: present
+        
+    - name: Docker CE - install packages
+      apt:
+        name: '{{ item }}'
+        state: latest
+        install_recommends: yes
+      with_items:
+        - docker-ce
+        - docker-compose
+
+    # Add developer account
+    - name: Add developer account
+      user:
+        name: developer
+        password: password
+        group: docker
+
+    # Set chown/chmod
+    - name: Chown
+      command: find /app/ -mindepth 1 -exec chown developer:docker {} \;
+
+    - name: Chmod - dirs
+      command: find /app/ -mindepth 1 -type d -exec chmod 0777 developer:docker {} \;
+
+    - name: Chmod - files
+      command: find /app/ -mindepth 1 -type f -exec chmod 0666 developer:docker {} \;
+
+    # Start App
+    - name: Start App
+      docker_service:
+        project_src: /app/itm/content/docker
